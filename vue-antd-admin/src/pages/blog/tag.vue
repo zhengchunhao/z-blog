@@ -1,15 +1,19 @@
 <template>
   <div class="card-list">
-    <a-list :grid="{gutter: 24, lg: 3, md: 2, sm: 1, xs: 1}" :dataSource="dataSource">
+    <a title="快速开始" />
+    <a-list
+      :grid="{gutter: 24, lg: 3, md: 2, sm: 1, xs: 1}"
+      :dataSource="dataSource"
+    >
       <a-list-item slot="renderItem" slot-scope="item">
         <template v-if="item.add">
-          <a-button class="new-btn" @click="openOrCloseModal()" type="dashed">
-            <a-icon type="plus" />新增标签
+          <a-button class="new-btn" type="dashed">
+            <a-icon type="plus" />新增产品
           </a-button>
         </template>
         <template v-else>
           <a-card :hoverable="true">
-            <a-card-meta @click="tagDetail(item)">
+           <a-card-meta @click="tagDetail(item)">
               <div style="margin-bottom: 3px" slot="title">{{item.title}}</div>
               <a-avatar
                 class="card-avatar"
@@ -24,8 +28,7 @@
           </a-card>
         </template>
       </a-list-item>
-    </a-list>
-    <a-modal title="标签管理" :visible="visible" @ok="handleSubmit" @cancel="handleCancel">
+      <a-modal title="标签管理" :visible="visible" @ok="handleSubmit" @cancel="handleCancel">
       <a-form-model
         :model="tagForm"
         ref="tagForm"
@@ -56,6 +59,7 @@
         </a-form-model-item>
       </a-form-model>
     </a-modal>
+    </a-list>
   </div>
 </template>
 
@@ -69,10 +73,10 @@ import {
   tag,
   delImage,
 } from "@/services/blog/tag";
-import { tr } from "date-fns/locale";
+
 export default {
-  name: "tag",
-  data() {
+  name: 'CardList',
+  data () {
     return {
       labelCol: { span: 4 },
       wrapperCol: { span: 14 },
@@ -87,7 +91,13 @@ export default {
           { required: true, message: "请输入标签介绍", trigger: "blur" },
         ],
       },
-    };
+      desc: '一起撰写我们的播客吧！！！',
+      linkList: [
+        {icon: 'rocket', href:{path:'/blog/myblog'}  , title: '快速开始'},
+        {icon: 'info-circle-o', href: '/#/', title: '产品简介'},
+        {icon: 'file-text', href: '/#/', title: '产品文档'}
+      ],
+    }
   },
   created() {
     this.getList();
@@ -148,7 +158,7 @@ export default {
           this.tagForm = res.data;
           image(this.tagForm.imageId).then((res) => {
             if (res) {
-              this.visible = true;
+              this.disabled = true;
             }
             var data = res;
             var image = {
@@ -213,29 +223,34 @@ export default {
     //标签下得文章
     tagDetail(item){
       this.$router.push({path:'/blog/myblog',query:{tagId:item.id}})
-    }
+    },
+      //链接路由跳转
+  goLink(item){
+     this.$rouer.push(item)
+  }
   },
-};
+}
 </script>
 
 <style lang="less" scoped>
-.card-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 48px;
-}
-.new-btn {
-  border-radius: 2px;
-  width: 100%;
-  height: 187px;
-}
-.meta-content {
-  position: relative;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  height: 64px;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-}
+  .card-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 48px;
+  }
+  .new-btn{
+    border-radius: 2px;
+    width: 100%;
+    height: 187px;
+  }
+  .meta-content{
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    height: 64px;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
 </style>

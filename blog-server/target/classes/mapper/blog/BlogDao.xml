@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zch.blog.dao.BlogDao">
+
+    <resultMap type="com.zch.blog.entity.Blog" id="BlogMap">
+        <result property="blogId" column="blog_id" jdbcType="INTEGER"/>
+        <result property="blogTitle" column="blog_title" jdbcType="VARCHAR"/>
+        <result property="blogBody" column="blog_body" jdbcType="VARCHAR"/>
+        <result property="blogDiscusscount" column="blog_discussCount" jdbcType="INTEGER"/>
+        <result property="blogBlogviews" column="blog_blogViews" jdbcType="INTEGER"/>
+        <result property="blogTime" column="blog_time" jdbcType="TIMESTAMP"/>
+        <result property="blogState" column="blog_state" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="likeCount" column="like_count" jdbcType="INTEGER"/>
+        <result property="markdowId" column="markdow_id" jdbcType="INTEGER"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="editBy" column="edit_by" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="editTime" column="edit_time" jdbcType="TIMESTAMP"/>
+        <result property="introduce" column="introduce"/>
+        <result property="current" column="current"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BlogMap">
+        select
+          blog_id, blog_title, blog_body, blog_discussCount, blog_blogViews, blog_time, blog_state, user_id, like_count, markdow_id, create_by, edit_by, create_time, edit_time,current,introduce
+        from blog.blog
+        where blog_id = #{blogId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BlogMap">
+        select
+          blog_id, blog_title, blog_body, blog_discussCount, blog_blogViews, blog_time, blog_state, user_id, like_count, markdow_id, create_by, edit_by, create_time, edit_time,introduce,current
+        from blog.blog
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BlogMap">
+        select
+          blog_id, blog_title, blog_body, blog_discussCount, blog_blogViews, blog_time, blog_state, user_id, like_count, markdow_id, create_by, edit_by, create_time, edit_time,introduce,current
+        from blog.blog
+        <where>
+            <if test="blogId != null">
+                and blog_id = #{blogId}
+            </if>
+            <if test="blogTitle != null and blogTitle != ''">
+                and blog_title = #{blogTitle}
+            </if>
+            <if test="blogBody != null and blogBody != ''">
+                and blog_body = #{blogBody}
+            </if>
+            <if test="blogDiscusscount != null">
+                and blog_discussCount = #{blogDiscusscount}
+            </if>
+            <if test="blogBlogviews != null">
+                and blog_blogViews = #{blogBlogviews}
+            </if>
+            <if test="blogTime != null">
+                and blog_time = #{blogTime}
+            </if>
+            <if test="blogState != null">
+                and blog_state = #{blogState}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="likeCount != null">
+                and like_count = #{likeCount}
+            </if>
+            <if test="markdowId != null">
+                and markdow_id = #{markdowId}
+            </if>
+            <if test="createBy != null and createBy != ''">
+                and create_by = #{createBy}
+            </if>
+            <if test="editBy != null and editBy != ''">
+                and edit_by = #{editBy}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="editTime != null">
+                and edit_time = #{editTime}
+            </if>
+            <if test="introduce != '' and introduce != null" >
+                and introduce = #{introduce}
+            </if>
+            <if test="current != null">
+                and current = #{current}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="blogId" useGeneratedKeys="true">
+        insert into blog.blog(blog_title, blog_body, blog_discussCount, blog_blogViews, blog_time, blog_state, user_id, like_count, markdow_id, create_by, edit_by, create_time, edit_time,current,introduce)
+        values (#{blogTitle}, #{blogBody}, #{blogDiscusscount}, #{blogBlogviews}, #{blogTime}, #{blogState}, #{userId}, #{likeCount}, #{markdowId}, #{createBy}, #{editBy}, #{createTime}, #{editTime},#{current},#{introduce})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update blog.blog
+        <set>
+            <if test="blogTitle != null and blogTitle != ''">
+                blog_title = #{blogTitle},
+            </if>
+            <if test="blogBody != null and blogBody != ''">
+                blog_body = #{blogBody},
+            </if>
+            <if test="blogDiscusscount != null">
+                blog_discussCount = #{blogDiscusscount},
+            </if>
+            <if test="blogBlogviews != null">
+                blog_blogViews = #{blogBlogviews},
+            </if>
+            <if test="blogTime != null">
+                blog_time = #{blogTime},
+            </if>
+            <if test="blogState != null">
+                blog_state = #{blogState},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="likeCount != null">
+                like_count = #{likeCount},
+            </if>
+            <if test="markdowId != null">
+                markdow_id = #{markdowId},
+            </if>
+            <if test="createBy != null and createBy != ''">
+                create_by = #{createBy},
+            </if>
+            <if test="editBy != null and editBy != ''">
+                edit_by = #{editBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="editTime != null">
+                edit_time = #{editTime},
+            </if>
+            <if test="introduce != '' and introduce != null">
+                introduce = #{introduce},
+            </if>
+            <if test="current != null">
+                current = #{current},
+            </if>
+        </set>
+        where blog_id = #{blogId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from blog.blog where blog_id = #{blogId}
+    </delete>
+
+</mapper>

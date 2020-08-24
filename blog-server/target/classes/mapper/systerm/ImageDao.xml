@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zch.systerm.dao.ImageDao">
+
+    <resultMap type="com.zch.systerm.entity.Image" id="ImageMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="path" column="path" jdbcType="VARCHAR"/>
+        <result property="uuid" column="uuid" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="VARCHAR"/>
+        <result property="imageName" column="image_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ImageMap">
+        select
+          id, path, uuid, type, image_name
+        from blog.image
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ImageMap">
+        select
+          id, path, uuid, type, image_name
+        from blog.image
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="ImageMap">
+        select
+          id, path, uuid, type, image_name
+        from blog.image
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="path != null and path != ''">
+                and path = #{path}
+            </if>
+            <if test="uuid != null and uuid != ''">
+                and uuid = #{uuid}
+            </if>
+            <if test="type != null and type != ''">
+                and type = #{type}
+            </if>
+            <if test="imageName != null and imageName != ''">
+                and image_name = #{imageName}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into blog.image(path, uuid, type, image_name)
+        values (#{path}, #{uuid}, #{type}, #{imageName})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update blog.image
+        <set>
+            <if test="path != null and path != ''">
+                path = #{path},
+            </if>
+            <if test="uuid != null and uuid != ''">
+                uuid = #{uuid},
+            </if>
+            <if test="type != null and type != ''">
+                type = #{type},
+            </if>
+            <if test="imageName != null and imageName != ''">
+                image_name = #{imageName},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from blog.image where id = #{id}
+    </delete>
+
+</mapper>

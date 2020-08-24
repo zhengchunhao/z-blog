@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zch.blog.dao.TagDao">
+
+    <resultMap type="com.zch.blog.entity.Tag" id="TagMap">
+        <result property="tagId" column="tag_id" jdbcType="INTEGER"/>
+        <result property="tagName" column="tag_name" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="tagIntroduce" column="tag_introduce" jdbcType="VARCHAR"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="editBy" column="edit_by" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="editTime" column="edit_time" jdbcType="TIMESTAMP"/>
+        <result property="imageId" column="image_id" />
+        <result property="imagePath" column="imagePath"/>
+        <result property="blogCount" column="blogCount"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TagMap">
+        select
+          tag_id, tag_name, user_id, tag_introduce,  create_by, edit_by, create_time, edit_time,image_id,blogCount
+        from blog.tag
+        where tag_id = #{tagId}
+    </select>
+
+
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TagMap">
+        select
+          tag_id, tag_name, user_id, tag_introduce,  create_by, edit_by, create_time, edit_time, image_id,blogCount, b.path as imagePath
+        from blog.tag a left  join blog.image b on a.image_id=b.id
+        <where>
+            <if test="tagId != null">
+                and tag_id = #{tagId}
+            </if>
+            <if test="tagName != null and tagName != ''">
+                and tag_name = #{tagName}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="tagIntroduce != null and tagIntroduce != ''">
+                and tag_introduce = #{tagIntroduce}
+            </if>
+
+            <if test="createBy != null and createBy != ''">
+                and create_by = #{createBy}
+            </if>
+            <if test="editBy != null and editBy != ''">
+                and edit_by = #{editBy}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="editTime != null">
+                and edit_time = #{editTime}
+            </if>
+            <if test="blogCount != null">
+                and blogCount = #{blogCount}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="tagId" useGeneratedKeys="true">
+        insert into blog.tag(tag_name, user_id, tag_introduce, create_by, edit_by, create_time, edit_time,image_id,blogCount)
+        values (#{tagName}, #{userId}, #{tagIntroduce}, #{createBy}, #{editBy}, #{createTime}, #{editTime},#{imageId},#{blogCount})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update blog.tag
+        <set>
+            <if test="tagName != null and tagName != ''">
+                tag_name = #{tagName},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="tagIntroduce != null and tagIntroduce != ''">
+                tag_introduce = #{tagIntroduce},
+            </if>
+
+            <if test="createBy != null and createBy != ''">
+                create_by = #{createBy},
+            </if>
+            <if test="editBy != null and editBy != ''">
+                edit_by = #{editBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="editTime != null">
+                edit_time = #{editTime},
+            </if>
+            <if test="imageId != null">
+                image_id = #{imageId},
+            </if>
+            <if test="blogCount != null">
+                blogCount = #{blogCount},
+            </if>
+        </set>
+        where tag_id = #{tagId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from blog.tag where tag_id = #{tagId}
+    </delete>
+
+</mapper>

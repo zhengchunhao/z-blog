@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper  namespace="com.zch.blog.dao.BlogTagDao">
+
+    <resultMap type="com.zch.blog.entity.BlogTag" id="BlogTagMap">
+        <result property="blogId" column="blog_id" jdbcType="INTEGER"/>
+        <result property="tagId" column="tag_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BlogTagMap">
+        select
+          blog_id, tag_id
+        from blog.blog_tag
+        where blog_id  = #{blogId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BlogTagMap">
+        select
+          blog_id, tag_id
+        from blog.blog_tag
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BlogTagMap">
+        select
+          blog_id, tag_id
+        from blog.blog_tag
+        <where>
+            <if test="blogId != null">
+                and blog_id = #{blogId}
+            </if>
+            <if test="tagId != null">
+                and tag_id = #{tagId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="" useGeneratedKeys="true">
+        insert into blog.blog_tag(blog_id, tag_id)
+        values (#{blogId}, #{tagId})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update blog.blog_tag
+        <set>
+            <if test="blogId != null">
+                blog_id = #{blogId},
+            </if>
+            <if test="tagId != null">
+                tag_id = #{tagId},
+            </if>
+        </set>
+        where blog_id  = #{blogId}
+    </update>
+
+    <!--根据主键删除-->
+    <delete id="deleteById">
+        delete from blog.blog_tag where  blog_id  = #{blogId}
+    </delete>
+
+    <!-- 批量插入-->
+    <insert id="insertBlogTags">
+       insert into blog.blog_tag(blog_id, tag_id) values
+       <foreach collection="tagIds" index="index" item="item" separator=",">
+           (#{blogId},#{item})
+       </foreach>
+    </insert>
+   
+    <select id="selectTagIds" resultType="int" parameterType="long">
+     select  tag_id from blog.blog_tag  where blog_id= #{blogId}
+    </select>
+
+</mapper>
