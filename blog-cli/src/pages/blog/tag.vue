@@ -220,14 +220,11 @@ export default {
         }
       });
     },
-    //标签下得文章
+    //点击标签进入文章列表
     tagDetail(item){
-      this.$router.push({path:'/blog/myblog',query:{tagId:item.id}})
+      this.$router.push({path:'/blog/myblog',query:{tag:item}})
     },
-      //链接路由跳转
-  goLink(item){
-     this.$rouer.push(item)
-  }
+
   },
 }
 </script>

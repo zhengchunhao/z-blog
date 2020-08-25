@@ -16,7 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.beans.Transient;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * (Blog)表服务实现类
@@ -50,13 +52,16 @@ public class BlogServiceImpl implements BlogService {
     /**
      * 查询多条数据
      *
-     * @param offset 查询起始位置
-     * @param limit  查询条数
+
      * @return 对象列表
      */
     @Override
-    public List<Blog> queryAllByLimit(int offset, int limit) {
-        return this.blogDao.queryAllByLimit(offset, limit);
+    public List<Blog> queryAll(Blog blog,Long tagId) {
+        Map map=new HashMap();
+        map.put("blogTitle",blog.getBlogTitle());
+        map.put("blogState",blog.getBlogState());
+        map.put("tagId",tagId);
+        return this.blogDao.queryAll(map);
     }
 
     /**

@@ -2,6 +2,7 @@ package com.zch.blog.controller;
 
 import com.zch.blog.entity.Blog;
 import com.zch.blog.service.BlogService;
+import com.zch.common.TablePageResult;
 import com.zch.systerm.controller.BaseController;
 import com.zch.systerm.entity.Image;
 import com.zch.systerm.service.ImageService;
@@ -52,10 +53,10 @@ public class BlogController extends BaseController {
     }
 
     /**
-     * 上传博客
+     *保存 博客
      * */
     @PostMapping("/blog")
-    public MyResponse addBlof(@RequestBody Blog blog){
+    public MyResponse addBlod(@RequestBody Blog blog){
      blogService.insert(blog);
      return  MyResponse.success(blogService.queryById(blog.getBlogId()));
     }
@@ -70,6 +71,14 @@ public class BlogController extends BaseController {
           return  MyResponse.success(blogService.queryById(blog.getBlogId()));
       }
       return  MyResponse.error("服务器错误");
+    }
+    /**
+     *查询博客列表
+     * */
+    @GetMapping("/blogs/{tagId}")
+    public TablePageResult blogList(@PathVariable("tagId") Long tagId, Blog blog){
+       pageIng();
+     return tablePageResult(blogService.queryAll(blog,tagId));
     }
 
 }

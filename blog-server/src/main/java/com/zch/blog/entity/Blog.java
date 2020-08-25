@@ -37,7 +37,7 @@ public class Blog implements Serializable {
      */
     private Date blogTime;
     /**
-     * 博文状态--0 删除 1正常
+     * 博文状态--0 删除 1已发布 2未完成
      */
     private Integer blogState;
     /**

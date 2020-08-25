@@ -29,67 +29,62 @@
         where blog_id = #{blogId}
     </select>
 
-    <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="BlogMap">
-        select
-          blog_id, blog_title, blog_body, blog_discussCount, blog_blogViews, blog_time, blog_state, user_id, like_count, markdow_id, create_by, edit_by, create_time, edit_time,introduce,current
-        from blog.blog
-    </select>
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="BlogMap">
         select
-          blog_id, blog_title, blog_body, blog_discussCount, blog_blogViews, blog_time, blog_state, user_id, like_count, markdow_id, create_by, edit_by, create_time, edit_time,introduce,current
-        from blog.blog
+          a.blog_id, blog_title, blog_body, blog_discussCount, blog_blogViews, blog_time, blog_state, user_id, like_count, markdow_id, create_by, edit_by, create_time, edit_time,introduce,current
+        from blog.blog a left join blog_tag b on a.blog_id = b.blog_id
         <where>
-            <if test="blogId != null">
-                and blog_id = #{blogId}
-            </if>
+<!--            <if test="blogId != null">-->
+<!--                and a.blog_id = #{blogId}-->
+<!--            </if>-->
             <if test="blogTitle != null and blogTitle != ''">
                 and blog_title = #{blogTitle}
             </if>
-            <if test="blogBody != null and blogBody != ''">
-                and blog_body = #{blogBody}
-            </if>
-            <if test="blogDiscusscount != null">
-                and blog_discussCount = #{blogDiscusscount}
-            </if>
-            <if test="blogBlogviews != null">
-                and blog_blogViews = #{blogBlogviews}
-            </if>
-            <if test="blogTime != null">
-                and blog_time = #{blogTime}
-            </if>
+<!--            <if test="blogBody != null and blogBody != ''">-->
+<!--                and blog_body = #{blogBody}-->
+<!--            </if>-->
+<!--            <if test="blogDiscusscount != null">-->
+<!--                and blog_discussCount = #{blogDiscusscount}-->
+<!--            </if>-->
+<!--            <if test="blogBlogviews != null">-->
+<!--                and blog_blogViews = #{blogBlogviews}-->
+<!--            </if>-->
+<!--            <if test="blogTime != null">-->
+<!--                and blog_time = #{blogTime}-->
+<!--            </if>-->
             <if test="blogState != null">
                 and blog_state = #{blogState}
             </if>
-            <if test="userId != null">
-                and user_id = #{userId}
-            </if>
-            <if test="likeCount != null">
-                and like_count = #{likeCount}
-            </if>
-            <if test="markdowId != null">
-                and markdow_id = #{markdowId}
-            </if>
-            <if test="createBy != null and createBy != ''">
-                and create_by = #{createBy}
-            </if>
-            <if test="editBy != null and editBy != ''">
-                and edit_by = #{editBy}
-            </if>
-            <if test="createTime != null">
-                and create_time = #{createTime}
-            </if>
-            <if test="editTime != null">
-                and edit_time = #{editTime}
-            </if>
-            <if test="introduce != '' and introduce != null" >
-                and introduce = #{introduce}
-            </if>
-            <if test="current != null">
-                and current = #{current}
-            </if>
+<!--            <if test="userId != null">-->
+<!--                and user_id = #{userId}-->
+<!--            </if>-->
+<!--            <if test="likeCount != null">-->
+<!--                and like_count = #{likeCount}-->
+<!--            </if>-->
+<!--            <if test="markdowId != null">-->
+<!--                and markdow_id = #{markdowId}-->
+<!--            </if>-->
+<!--            <if test="createBy != null and createBy != ''">-->
+<!--                and create_by = #{createBy}-->
+<!--            </if>-->
+<!--            <if test="editBy != null and editBy != ''">-->
+<!--                and edit_by = #{editBy}-->
+<!--            </if>-->
+<!--            <if test="createTime != null">-->
+<!--                and create_time = #{createTime}-->
+<!--            </if>-->
+<!--            <if test="editTime != null">-->
+<!--                and edit_time = #{editTime}-->
+<!--            </if>-->
+<!--            <if test="introduce != '' and introduce != null" >-->
+<!--                and introduce = #{introduce}-->
+<!--            </if>-->
+<!--            <if test="current != null">-->
+<!--                and current = #{current}-->
+<!--            </if>-->
+              b.tag_id =#{tagId}
         </where>
     </select>
 

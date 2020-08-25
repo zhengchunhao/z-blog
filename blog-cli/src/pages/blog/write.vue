@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-card :bordered="false">
-      <detail-list title="博文标签">
+      <detail-list v-if="tagId" title="博文标签">
         <detail-list-item term="标签名字">{{tag.tagName}}</detail-list-item>
         <detail-list-item term="博文数量">{{tag.blogCount}}</detail-list-item>
         <detail-list-item
@@ -53,8 +53,17 @@ export default {
     };
   },
   created() {
-    this.tagId = 13;
+    this.tagId=this.$route.query.tagId
+    if(!this.tagId==null||this.tagId==undefined){
     this.getTag();
+    }
+    if(this.$route.query.blogId!=null&&this.$route.query.blogId!=undefined){
+     blog(this.$route.query.blogId).then(res=>{
+      if(res.code==200){
+        this.blog=res.data
+      } 
+     }) 
+    }
   },
   methods: {
     getTag() {

@@ -22,12 +22,9 @@ public interface BlogService {
 
     /**
      * 查询多条数据
-     *
-     * @param offset 查询起始位置
-     * @param limit  查询条数
      * @return 对象列表
      */
-    List<Blog> queryAllByLimit(int offset, int limit);
+    List<Blog> queryAll(Blog blog,Long tagId);
 
     /**
      * 新增数据
@@ -36,6 +33,8 @@ public interface BlogService {
      * @return 实例对象
      */
     int insert(Blog blog);
+
+
 
     /**
      * 修改数据
