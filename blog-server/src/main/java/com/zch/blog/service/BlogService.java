@@ -50,6 +50,6 @@ public interface BlogService {
      * @param blogId 主键
      * @return 是否成功
      */
-    boolean deleteById(Long blogId);
+    int deleteById(Long blogId,Integer tagId);
 
 }

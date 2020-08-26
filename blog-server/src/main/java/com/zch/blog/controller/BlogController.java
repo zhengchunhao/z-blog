@@ -81,4 +81,11 @@ public class BlogController extends BaseController {
      return tablePageResult(blogService.queryAll(blog,tagId));
     }
 
+    /**
+     * 删除
+     * */
+   @DeleteMapping("/blog/{blogId}/{tagId}")
+   public MyResponse delBlog(@PathVariable("blogId") Long blogId,@PathVariable("tagId") Integer tagId){
+      return  result(blogService.deleteById(blogId,tagId));
+   }
 }

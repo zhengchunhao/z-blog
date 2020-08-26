@@ -48,6 +48,15 @@ public class TagController extends BaseController {
         return  result(tagService.update(tag));
     }
 
+    @DeleteMapping("/tag/{tagId}")
+    public  MyResponse deleteById(@PathVariable("tagId") Integer tagId){
+       if(tagService.deleteById(tagId)){
+           return  MyResponse.success();
+       } else {
+           return  MyResponse.error();
+       }
+    }
+
 
 
 }

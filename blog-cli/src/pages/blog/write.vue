@@ -54,7 +54,8 @@ export default {
   },
   created() {
     this.tagId=this.$route.query.tagId
-    if(!this.tagId==null||this.tagId==undefined){
+    console.log(this.$route.query.tagId)
+    if(this.tagId!=null&&this.tagId!=undefined){
     this.getTag();
     }
     if(this.$route.query.blogId!=null&&this.$route.query.blogId!=undefined){
@@ -98,8 +99,6 @@ export default {
     },
     //保存
     preservation(blogBody) {
-      console.log("保存")
-      console.log(blogBody)
       this.blog.blogBody = blogBody;
       if(this.blog.blogId == undefined || this.blog.blogId == null){
         add(this.blog).then(res=>{

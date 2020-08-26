@@ -37,8 +37,7 @@ export function update(data) {
 export function remove(ids) {
    return request({
       url: '/roles/' + ids,
-      method: 'delect',
-
+      method: 'delete',
    })
 }
 export function permsTree() {

@@ -37,8 +37,10 @@ function parseRoutes(routesConfig, routerMap) {
           page: routeCfg.page || router.page
         }
       }
-      if (routeCfg.invisible=='1' || router.invisible) {
+      if ( routeCfg.invisible==true) {
           route.meta.invisible = true
+      }else{
+        route.meta.invisible = false
       }
       if (routeCfg.children && routeCfg.children.length > 0) {
         route.children = parseRoutes(routeCfg.children, routerMap)
@@ -46,6 +48,7 @@ function parseRoutes(routesConfig, routerMap) {
       routes.push(route)
     }
   })
+ 
   return routes
 }
 
@@ -96,7 +99,7 @@ function mergeRoutes(target, source) {
   const routesMap = {}
   target.forEach(item => routesMap[item.path] = item)
   source.forEach(item => routesMap[item.path] = item)
-  console.log(routesMap)
+
   return Object.values(routesMap)
 }
 

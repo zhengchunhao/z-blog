@@ -39,7 +39,7 @@ export function update(data) {
 export function delMenuByid(id) {
   return request({
     url: '/menu/' + id,
-    method: 'delect'
+    method: 'delete'
   })
 }
 

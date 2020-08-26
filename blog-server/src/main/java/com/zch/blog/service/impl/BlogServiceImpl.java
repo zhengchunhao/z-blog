@@ -107,7 +107,14 @@ public class BlogServiceImpl implements BlogService {
      * @return 是否成功
      */
     @Override
-    public boolean deleteById(Long blogId) {
-        return this.blogDao.deleteById(blogId) > 0;
+    @Transactional
+    public int deleteById(Long blogId,Integer tagId) {
+       blogTagDao.deleteBytagIdBlogId(blogId,tagId);
+       List<Integer> list= blogTagDao.selectTagIds(blogId);
+       for (Integer Id:list){
+          Tag tag=tagDao.queryById(Id);
+          tag.setBlogCount(tag.getBlogCount()-1);
+       }
+        return this.blogDao.deleteById(blogId) ;
     }
 }

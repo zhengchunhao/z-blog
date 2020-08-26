@@ -44,7 +44,12 @@ public class RouteServiceImpl implements RouteService {
         route.setName(menu.getName());
         route.setRouter(menu.getComponent());
         route.setPath(menu.getPath());
-        route.setInvisible(menu.getVisible() == "1" ? true : false);
+        if(menu.getVisible()==null){
+            route.setInvisible(false);
+        }else {
+            route.setInvisible(menu.getVisible().equals("1" ) ? false : true);
+        }
+
         Meta meta = new Meta();
         meta.setAuthority(menu.getPerms());
         meta.setIcon(menu.getIcon());

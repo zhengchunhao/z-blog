@@ -7,6 +7,14 @@ export function blogs(params,tagId){
        params:params
    }) 
 }
+
+export function delBlog(blogId,tagId){
+   return request({
+      url:'/blog/'+blogId+'/'+tagId,
+      method:'delete' 
+   }) 
+}
 export default {
-    blogs, 
+    blogs,
+    delBlog, 
 }

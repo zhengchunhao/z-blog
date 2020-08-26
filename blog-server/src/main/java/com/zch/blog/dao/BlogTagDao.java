@@ -77,4 +77,10 @@ public interface BlogTagDao {
      * */
     List<Integer> selectTagIds(Long blogId);
 
+    /**
+     * 查询tagId下的博文个数
+     * */
+     int selectBlogIdsIntagId(Integer tarId);
+
+     int deleteBytagIdBlogId(@Param("blogId") Long blogId,@Param("tagId") Integer tagId);
 }

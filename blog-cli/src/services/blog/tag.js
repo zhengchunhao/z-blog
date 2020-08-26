@@ -51,6 +51,13 @@ return request({
     method:'delete',
    })
   }
+
+  export function delTage(tagId){
+  return request({
+      url:'/tag/'+tagId,
+      method:'delete'
+  })
+  }
      
 
  export default {
@@ -60,4 +67,5 @@ return request({
     upload,
     image,
     delImage,
+    delTage,
  }

@@ -4,6 +4,7 @@ import com.zch.framework.security.LoginBody;
 import com.zch.framework.security.LoginSevice;
 import com.zch.framework.security.ToeknService;
 import com.zch.systerm.entity.Menu;
+import com.zch.systerm.entity.Route;
 import com.zch.systerm.entity.User;
 import com.zch.systerm.service.PermissionService;
 import com.zch.systerm.service.RouteService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -70,7 +72,7 @@ public class LoginController {
      * */
    @GetMapping("/userRoutes")
     public MyResponse getRouteConfig(){
-
+       List<Route> list=routeService.getRoutes();
          return MyResponse.success(routeService.getRoutes());
    }
 

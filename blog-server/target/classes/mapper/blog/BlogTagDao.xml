@@ -75,4 +75,12 @@
      select  tag_id from blog.blog_tag  where blog_id= #{blogId}
     </select>
 
+    <select id="selectBlogIdsIntagId" resultType="int" parameterType="int">
+        select  count(1) from blog_tag where tag_id = #{tagId}
+    </select>
+
+    <delete id="deleteBytagIdBlogId" >
+       delete from blog_tag where tag_id = #{tagId} and blog_id = #{blogId}
+    </delete>
+
 </mapper>

@@ -42,7 +42,7 @@
         </a-form-model-item>
       </a-form-model>
     </a-modal>
-    <a-table :columns="columns" :data-source="menuData" :rowKey="record=>record.id">
+    <a-table :columns="columns" :data-source="menuData" :pagination="false" :rowKey="record=>record.id">
       <span slot="menuType" slot-scope="menuType">
         <a-tag
           :color="menuType === 'C' ? 'volcano' : menuType === 'M' ? 'geekblue' : 'green'"
@@ -51,13 +51,24 @@
       <span slot="icon" slot-scope="icon">
         <a-icon :type="icon" />
       </span>
-
+       <span slot="createTime" slot-scope="createTime">
+        {{createTime==null?"":moment(createTime).format('YYYY-MM-DD')}}
+      </span>
       <span slot="action" slot-scope="text, record">
         <a @click="aadMenu(record)">新增</a>
         <a-divider type="vertical" />
         <a @click="edit(record)">修改</a>
         <a-divider type="vertical" />
-        <a @click="aadMenu(record)" class="ant-dropdown-link">删除</a>
+        <a-popconfirm
+    title="你确定要删除该菜单吗"
+    ok-text="确定"
+    cancel-text="取消"
+    @confirm="confirm(record)"
+    @cancel="cancel"
+  >
+  <a class="ant-dropdown-link">删除</a>
+        </a-popconfirm>
+        
       </span>
     </a-table>
   </div>
@@ -70,7 +81,7 @@ import {
   delMenuByid,
   update,
 } from "@/services/systerm/menu";
-
+import moment from "moment";
 const columns = [
   {
     title: "名称",
@@ -114,6 +125,7 @@ const columns = [
     dataIndex: "createTime",
     key: "createTime",
     align: "center",
+     scopedSlots: { customRender: "createTime" },
   },
   {
     title: "创建人",
@@ -134,6 +146,7 @@ export default {
       wrapperCol: { span: 14 },
       menuData: [],
       columns,
+      moment,
       loading: false,
       visible: false,
       flag: "add",
@@ -196,6 +209,20 @@ export default {
           this.menuForm = res.data;
         }
       });
+    },
+    //删除
+    confirm(menu){
+    delMenuByid(menu.id).then(res=>{
+      if(res.code==200){
+        this.$message.success('操作成功')
+        this.initTable()
+      }else{
+        this.$message.warning('请先删除子菜单')
+      }
+    })  
+    },
+    cancel(){
+
     },
 
     handleOk(e) {

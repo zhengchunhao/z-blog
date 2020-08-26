@@ -4,18 +4,24 @@
       <div style="display: flex; flex-wrap: wrap">
         <head-info title="标签名称" content="8个任务" :bordered="true" />
         <head-info title="博文总数" content="32分钟" :bordered="true" />
-        <head-info title="图发布博文数" content="24个" />
+        <head-info v-if="queryForm.blogState==0" title="已删除" :content="pagination.total" />
+        <head-info v-else-if="queryForm.blogState==2" title="未完成" :content="pagination.total" />
+        <head-info v-else title="已发布" :content="pagination.total" />
       </div>
     </a-card>
     <a-card style="margin-top: 24px" :bordered="false" title="标准列表">
       <div slot="extra">
         <a-radio-group>
-          <a-radio-button>全部</a-radio-button>
-          <a-radio-button>已发布</a-radio-button>
-          <a-radio-button>在进行</a-radio-button>
-          <a-radio-button>已删除</a-radio-button>
+          <a-radio-button @click="searchState()">全部</a-radio-button>
+          <a-radio-button @click="searchState(1)">已发布</a-radio-button>
+          <a-radio-button @click="searchState(2)">在进行</a-radio-button>
+          <a-radio-button @click="searchState(0)">已删除</a-radio-button>
         </a-radio-group>
-        <a-input-search style="margin-left: 16px; width: 272px;" />
+        <a-input-search
+          style="margin-left: 16px; width: 272px;"
+          v-model="queryForm.blogTitle"
+          @search="onSearch"
+        />
       </div>
       <a-button type="dashed" style="width: 100%" icon="plus" @click="addBlog">添加</a-button>
       <a-list item-layout="horizontal" :data-source="dataSource" :pagination="pagination">
@@ -24,29 +30,41 @@
             <a slot="title">{{ item.blogTitle }}</a>
             <a-avatar slot="avatar" :src="'data:image/gif;base64,'+tag.avatar" />
           </a-list-item-meta>
-             <div slot="actions">
-              <a>编辑</a>
-            </div>
-            <div slot="actions">
-              <a-dropdown>
-                <a-menu slot="overlay">
-                  <a-menu-item>
-                    <a>编辑</a>
-                  </a-menu-item>
-                  <a-menu-item>
+          <div slot="actions">
+            <a>进度提交</a>
+          </div>
+          <div slot="actions">
+            <a-dropdown>
+              <a-menu slot="overlay">
+                <a-menu-item @click="edit(item)">
+                  <a>编辑</a>
+                </a-menu-item>
+
+                <a-menu-item>
+                  <a-popconfirm
+                    title="确定要删除这篇文章吗?"
+                    ok-text="确定"
+                    cancel-text="取消"
+                    @confirm="confirm(item)"
+                    @cancel="cancel"
+                  >
                     <a>删除</a>
-                  </a-menu-item>
-                </a-menu>
-                <a>
-                  更多
-                  <a-icon type="down" />
-                </a>
-              </a-dropdown>
-            </div>
-             <div class="list-content">
+                  </a-popconfirm>
+                </a-menu-item>
+              </a-menu>
+              <a>
+                更多
+                <a-icon type="down" />
+              </a>
+            </a-dropdown>
+          </div>
+          <div class="list-content">
             <div class="list-content-item">
               <a-tag v-if="item.blogState" color="green">{{'发布'}}</a-tag>
-              <a-tag v-else :color="item.blogState==0 ? 'red': 'orange'">{{item.blogState==0?'删除':'进行中'}}</a-tag>
+              <a-tag
+                v-else
+                :color="item.blogState==0 ? 'red': 'orange'"
+              >{{item.blogState==0?'删除':'进行中'}}</a-tag>
             </div>
             <div class="list-content-item">
               <span>开始时间</span>
@@ -64,7 +82,7 @@
 
 <script>
 import HeadInfo from "../../components/tool/HeadInfo";
-import { blogs } from "@/services/blog/blog";
+import { blogs, delBlog } from "@/services/blog/blog";
 import moment from "moment";
 export default {
   name: "StandardList",
@@ -95,9 +113,10 @@ export default {
   created() {
     this.getBlogList();
   },
+
   methods: {
     addBlog() {
-      this.$router.push({ path: "/blog/write", query: { tagId: this.tagId } });
+      this.$router.push({ path: "/blog/write", query: { tagId: this.tag.id } });
     },
     //分页操作
     onChange(page, pageSize) {
@@ -118,10 +137,35 @@ export default {
     },
     //编辑
     edit(item) {
-      console.log("编辑");
+      this.$router.push({
+        path: "/blog/write",
+        query: { blogId: item.blogId, tagId: this.tag.id },
+      });
     },
-    del(item) {
-      console.lgo("删除");
+
+    searchState(state) {
+      if (state) {
+        this.queryForm.blogState = state;
+        this.getBlogList();
+      } else {
+        this.queryForm.blogState = undefined;
+        this.queryForm.blogTitle = undefined;
+        this.getBlogList();
+      }
+    },
+    onSearch() {
+      this.getBlogList();
+    },
+    cancel() {},
+    confirm(item) {
+      delBlog(item.blogId, this.tag.id).then((res) => {
+        if (res.code == 200) {
+          this.$message.success("操作成功");
+          this.getBlogList()
+        } else {
+          this.$message.error("操作失败");
+        }
+      });
     },
   },
 };

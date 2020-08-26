@@ -35,12 +35,12 @@
         select
           a.blog_id, blog_title, blog_body, blog_discussCount, blog_blogViews, blog_time, blog_state, user_id, like_count, markdow_id, create_by, edit_by, create_time, edit_time,introduce,current
         from blog.blog a left join blog_tag b on a.blog_id = b.blog_id
-        <where>
+        <trim prefix="WHERE" prefixOverrides="AND">
 <!--            <if test="blogId != null">-->
 <!--                and a.blog_id = #{blogId}-->
 <!--            </if>-->
             <if test="blogTitle != null and blogTitle != ''">
-                and blog_title = #{blogTitle}
+                and blog_title like concat('%',#{blogTitle},'%') 
             </if>
 <!--            <if test="blogBody != null and blogBody != ''">-->
 <!--                and blog_body = #{blogBody}-->
@@ -84,8 +84,10 @@
 <!--            <if test="current != null">-->
 <!--                and current = #{current}-->
 <!--            </if>-->
-              b.tag_id =#{tagId}
-        </where>
+             <if test="tagId != null">
+                 and   b.tag_id =#{tagId}
+             </if>
+        </trim>
     </select>
 
     <!--新增所有列-->

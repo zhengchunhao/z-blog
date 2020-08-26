@@ -1,19 +1,16 @@
 <template>
   <div class="card-list">
     <a title="快速开始" />
-    <a-list
-      :grid="{gutter: 24, lg: 3, md: 2, sm: 1, xs: 1}"
-      :dataSource="dataSource"
-    >
+    <a-list :grid="{gutter: 24, lg: 3, md: 2, sm: 1, xs: 1}" :dataSource="dataSource">
       <a-list-item slot="renderItem" slot-scope="item">
         <template v-if="item.add">
           <a-button class="new-btn" type="dashed">
-            <a-icon type="plus" />新增产品
+            <a-icon type="plus" />新增标签
           </a-button>
         </template>
         <template v-else>
           <a-card :hoverable="true">
-           <a-card-meta @click="tagDetail(item)">
+            <a-card-meta @click="tagDetail(item)">
               <div style="margin-bottom: 3px" slot="title">{{item.title}}</div>
               <a-avatar
                 class="card-avatar"
@@ -24,41 +21,49 @@
               <div class="meta-content" slot="description">{{item.content}}</div>
             </a-card-meta>
             <a slot="actions" @click="edit(item)">修改</a>
-            <a slot="actions">删除</a>
+            <a-popconfirm slot="actions"
+              title="你确定要删除此标签吗?"
+              ok-text="确定"
+              cancel-text="取消"
+              @confirm="confirm(item)"
+              @cancel="cancel()"
+            >
+              <a>删除</a>
+            </a-popconfirm>
           </a-card>
         </template>
       </a-list-item>
       <a-modal title="标签管理" :visible="visible" @ok="handleSubmit" @cancel="handleCancel">
-      <a-form-model
-        :model="tagForm"
-        ref="tagForm"
-        :rules="rules"
-        :label-col="labelCol"
-        :wrapper-col="wrapperCol"
-      >
-        <a-form-model-item label="名称" prop="tagName">
-          <a-input v-model="tagForm.tagName" />
-        </a-form-model-item>
-        <a-form-model-item label="标签头像">
-          <a-upload
-            :customRequest="customRequest"
-            :default-file-list="imageList"
-            :remove="removeImage"
-            list-type="picture"
-            class="upload-list-inline"
-          >
-            <div>
-              <a-button :disabled="disabled">
-                <a-icon type="upload" />上传
-              </a-button>
-            </div>
-          </a-upload>
-        </a-form-model-item>
-        <a-form-model-item label="标签介绍" prop="tagIntroduce">
-          <a-input v-model="tagForm.tagIntroduce" type="textarea" />
-        </a-form-model-item>
-      </a-form-model>
-    </a-modal>
+        <a-form-model
+          :model="tagForm"
+          ref="tagForm"
+          :rules="rules"
+          :label-col="labelCol"
+          :wrapper-col="wrapperCol"
+        >
+          <a-form-model-item label="名称" prop="tagName">
+            <a-input v-model="tagForm.tagName" />
+          </a-form-model-item>
+          <a-form-model-item label="标签头像">
+            <a-upload
+              :customRequest="customRequest"
+              :default-file-list="imageList"
+              :remove="removeImage"
+              list-type="picture"
+              class="upload-list-inline"
+            >
+              <div>
+                <a-button :disabled="disabled">
+                  <a-icon type="upload" />上传
+                </a-button>
+              </div>
+            </a-upload>
+          </a-form-model-item>
+          <a-form-model-item label="标签介绍" prop="tagIntroduce">
+            <a-input v-model="tagForm.tagIntroduce" type="textarea" />
+          </a-form-model-item>
+        </a-form-model>
+      </a-modal>
     </a-list>
   </div>
 </template>
@@ -72,11 +77,12 @@ import {
   addTag,
   tag,
   delImage,
+  delTage,
 } from "@/services/blog/tag";
 
 export default {
-  name: 'CardList',
-  data () {
+  name: "CardList",
+  data() {
     return {
       labelCol: { span: 4 },
       wrapperCol: { span: 14 },
@@ -91,13 +97,13 @@ export default {
           { required: true, message: "请输入标签介绍", trigger: "blur" },
         ],
       },
-      desc: '一起撰写我们的播客吧！！！',
+      desc: "一起撰写我们的播客吧！！！",
       linkList: [
-        {icon: 'rocket', href:{path:'/blog/myblog'}  , title: '快速开始'},
-        {icon: 'info-circle-o', href: '/#/', title: '产品简介'},
-        {icon: 'file-text', href: '/#/', title: '产品文档'}
+        { icon: "rocket", href: { path: "/blog/myblog" }, title: "快速开始" },
+        { icon: "info-circle-o", href: "/#/", title: "产品简介" },
+        { icon: "file-text", href: "/#/", title: "产品文档" },
       ],
-    }
+    };
   },
   created() {
     this.getList();
@@ -172,6 +178,19 @@ export default {
         }
       });
     },
+
+    confirm(item) {
+      //删除
+      delTage(item.id).then((res) => {
+        if (res.code == 200) {
+          this.$message.success("操作成功");
+        } else {
+          this.$message.warning("请先删除该标签下的文章");
+        }
+      });
+    },
+    cancel() {},
+
     //对话框取消
     handleCancel() {
       this.visible = !this.visible;
@@ -209,7 +228,6 @@ export default {
     //图片移除
     removeImage(data) {
       this.imageList = [];
-
       this.disabled = false;
       delImage(this.tagForm.imageId).then((res) => {
         if (res.code == 200) {
@@ -221,33 +239,31 @@ export default {
       });
     },
     //点击标签进入文章列表
-    tagDetail(item){
-      this.$router.push({path:'/blog/myblog',query:{tag:item}})
+    tagDetail(item) {
+      this.$router.push({ path: "/blog/myblog", query: { tag: item } });
     },
-
   },
-}
+};
 </script>
 
 <style lang="less" scoped>
-  .card-avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 48px;
-  }
-  .new-btn{
-    border-radius: 2px;
-    width: 100%;
-    height: 187px;
-  }
-  .meta-content{
-    position: relative;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    height: 64px;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-  }
-
+.card-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 48px;
+}
+.new-btn {
+  border-radius: 2px;
+  width: 100%;
+  height: 187px;
+}
+.meta-content {
+  position: relative;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  height: 64px;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
 </style>
